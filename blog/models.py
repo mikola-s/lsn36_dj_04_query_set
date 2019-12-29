@@ -11,7 +11,10 @@ class Author(AbstractUser):
 
 
 class Article(models.Model):
-    pass
+    text = models.TextField(max_length=2048)
+    title = models.CharField(max_length=256)
+    post_time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
 
 class Comments(models.Model):
