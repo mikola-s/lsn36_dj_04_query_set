@@ -16,6 +16,9 @@ class Article(models.Model):
     post_time = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.author}/{self.title}"
+
 
 class Comments(models.Model):
     pass
