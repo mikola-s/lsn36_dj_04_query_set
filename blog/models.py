@@ -8,3 +8,19 @@ class Author(AbstractUser):
 
     def __str__(self):
         return self.get_username()
+
+
+class Article(models.Model):
+    pass
+
+
+class Comments(models.Model):
+    pass
+
+
+class Expression(models.Model):
+    pass
+
+
+class ExpressionType(models.Model):
+    pass
