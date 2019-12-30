@@ -33,9 +33,9 @@ class Comment(models.Model):
     )
 
 
-class Expression(models.Model):
-    pass
-
-
 class ExpressionType(models.Model):
+    name = models.CharField(max_length=20)
+
+
+class Expression(models.Model):
     pass
