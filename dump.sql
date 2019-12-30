@@ -296,7 +296,11 @@ ALTER SEQUENCE public.blog_author_user_permissions_id_seq OWNED BY public.blog_a
 --
 
 CREATE TABLE public.blog_comment (
-    id integer NOT NULL
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    comment_id integer,
+    target_id integer NOT NULL,
+    text text NOT NULL
 );
 
 
@@ -714,7 +718,7 @@ COPY public.blog_author_user_permissions (id, author_id, permission_id) FROM std
 -- Data for Name: blog_comment; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_comment (id) FROM stdin;
+COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin;
 \.
 
 
@@ -793,6 +797,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 18	sessions	0001_initial	2019-12-29 19:57:11.237205+00
 19	blog	0002_article_comments_expression_expressiontype	2019-12-29 21:49:28.976646+00
 20	blog	0003_auto_20191230_1247	2019-12-30 10:48:05.40531+00
+21	blog	0004_auto_20191230_1415	2019-12-30 12:16:06.411769+00
 \.
 
 
@@ -893,7 +898,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 20, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
 
 
 --
@@ -1135,6 +1140,27 @@ CREATE INDEX blog_author_username_76bab662_like ON public.blog_author USING btre
 
 
 --
+-- Name: blog_comment_author_id_4f11e2e0; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_comment_author_id_4f11e2e0 ON public.blog_comment USING btree (author_id);
+
+
+--
+-- Name: blog_comment_comment_id_867709d7; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_comment_comment_id_867709d7 ON public.blog_comment USING btree (comment_id);
+
+
+--
+-- Name: blog_comment_target_id_2462b5da; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_comment_target_id_2462b5da ON public.blog_comment USING btree (target_id);
+
+
+--
 -- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: mikola-s
 --
 
@@ -1224,6 +1250,30 @@ ALTER TABLE ONLY public.blog_author_user_permissions
 
 ALTER TABLE ONLY public.blog_author_user_permissions
     ADD CONSTRAINT blog_author_user_per_permission_id_801f8ebe_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_comment blog_comment_author_id_4f11e2e0_fk_blog_author_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_comment
+    ADD CONSTRAINT blog_comment_author_id_4f11e2e0_fk_blog_author_id FOREIGN KEY (author_id) REFERENCES public.blog_author(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_comment blog_comment_comment_id_867709d7_fk_blog_comment_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_comment
+    ADD CONSTRAINT blog_comment_comment_id_867709d7_fk_blog_comment_id FOREIGN KEY (comment_id) REFERENCES public.blog_comment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_comment blog_comment_target_id_2462b5da_fk_blog_article_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_comment
+    ADD CONSTRAINT blog_comment_target_id_2462b5da_fk_blog_article_id FOREIGN KEY (target_id) REFERENCES public.blog_article(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
