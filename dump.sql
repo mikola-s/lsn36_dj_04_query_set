@@ -292,15 +292,15 @@ ALTER SEQUENCE public.blog_author_user_permissions_id_seq OWNED BY public.blog_a
 
 
 --
--- Name: blog_comments; Type: TABLE; Schema: public; Owner: mikola-s
+-- Name: blog_comment; Type: TABLE; Schema: public; Owner: mikola-s
 --
 
-CREATE TABLE public.blog_comments (
+CREATE TABLE public.blog_comment (
     id integer NOT NULL
 );
 
 
-ALTER TABLE public.blog_comments OWNER TO "mikola-s";
+ALTER TABLE public.blog_comment OWNER TO "mikola-s";
 
 --
 -- Name: blog_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: mikola-s
@@ -321,7 +321,7 @@ ALTER TABLE public.blog_comments_id_seq OWNER TO "mikola-s";
 -- Name: blog_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mikola-s
 --
 
-ALTER SEQUENCE public.blog_comments_id_seq OWNED BY public.blog_comments.id;
+ALTER SEQUENCE public.blog_comments_id_seq OWNED BY public.blog_comment.id;
 
 
 --
@@ -565,10 +565,10 @@ ALTER TABLE ONLY public.blog_author_user_permissions ALTER COLUMN id SET DEFAULT
 
 
 --
--- Name: blog_comments id; Type: DEFAULT; Schema: public; Owner: mikola-s
+-- Name: blog_comment id; Type: DEFAULT; Schema: public; Owner: mikola-s
 --
 
-ALTER TABLE ONLY public.blog_comments ALTER COLUMN id SET DEFAULT nextval('public.blog_comments_id_seq'::regclass);
+ALTER TABLE ONLY public.blog_comment ALTER COLUMN id SET DEFAULT nextval('public.blog_comments_id_seq'::regclass);
 
 
 --
@@ -667,6 +667,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 38	Can change article	10	change_article
 39	Can delete article	10	delete_article
 40	Can view article	10	view_article
+41	Can add comment	7	add_comment
+42	Can change comment	7	change_comment
+43	Can delete comment	7	delete_comment
+44	Can view comment	7	view_comment
 \.
 
 
@@ -707,10 +711,10 @@ COPY public.blog_author_user_permissions (id, author_id, permission_id) FROM std
 
 
 --
--- Data for Name: blog_comments; Type: TABLE DATA; Schema: public; Owner: mikola-s
+-- Data for Name: blog_comment; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_comments (id) FROM stdin;
+COPY public.blog_comment (id) FROM stdin;
 \.
 
 
@@ -757,10 +761,10 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 4	auth	group
 5	contenttypes	contenttype
 6	sessions	session
-7	blog	comments
 8	blog	expression
 9	blog	expressiontype
 10	blog	article
+7	blog	comment
 \.
 
 
@@ -788,6 +792,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 17	admin	0003_logentry_add_action_flag_choices	2019-12-29 19:57:11.17868+00
 18	sessions	0001_initial	2019-12-29 19:57:11.237205+00
 19	blog	0002_article_comments_expression_expressiontype	2019-12-29 21:49:28.976646+00
+20	blog	0003_auto_20191230_1247	2019-12-30 10:48:05.40531+00
 \.
 
 
@@ -818,7 +823,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 40, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 44, true);
 
 
 --
@@ -888,7 +893,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 19, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 20, true);
 
 
 --
@@ -996,10 +1001,10 @@ ALTER TABLE ONLY public.blog_author
 
 
 --
--- Name: blog_comments blog_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+-- Name: blog_comment blog_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
 --
 
-ALTER TABLE ONLY public.blog_comments
+ALTER TABLE ONLY public.blog_comment
     ADD CONSTRAINT blog_comments_pkey PRIMARY KEY (id);
 
 
