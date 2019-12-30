@@ -5,6 +5,6 @@ from . import models
 
 admin.site.register(models.Author)
 admin.site.register(models.Article)
-admin.site.register(models.Comments)
+admin.site.register(models.Comment)
 admin.site.register(models.Expression)
 admin.site.register(models.ExpressionType)

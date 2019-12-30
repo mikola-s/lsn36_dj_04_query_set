@@ -20,8 +20,12 @@ class Article(models.Model):
         return f"{self.author}/{self.title}"
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     pass
+    # author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    # text = models.TextField(max_length=1024)
+    # target = models.ForeignKey(Article, on_delete=models.CASCADE)
+    # comment
 
 
 class Expression(models.Model):
