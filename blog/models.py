@@ -21,11 +21,16 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    pass
-    # author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    # text = models.TextField(max_length=1024)
-    # target = models.ForeignKey(Article, on_delete=models.CASCADE)
-    # comment
+    author = models.ForeignKey(to=Author, on_delete=models.CASCADE)
+    text = models.TextField(max_length=1024)
+    target = models.ForeignKey(to=Article, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        to='blog.Comment',
+        on_delete=models.CASCADE,
+        related_name='comments',
+        null=True,
+        blank=True,
+    )
 
 
 class Expression(models.Model):
