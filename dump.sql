@@ -140,6 +140,43 @@ ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
 
 
 --
+-- Name: blog_article; Type: TABLE; Schema: public; Owner: mikola-s
+--
+
+CREATE TABLE public.blog_article (
+    id integer NOT NULL,
+    text text NOT NULL,
+    title character varying(256) NOT NULL,
+    post_time timestamp with time zone NOT NULL,
+    author_id integer NOT NULL
+);
+
+
+ALTER TABLE public.blog_article OWNER TO "mikola-s";
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE; Schema: public; Owner: mikola-s
+--
+
+CREATE SEQUENCE public.blog_article_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blog_article_id_seq OWNER TO "mikola-s";
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mikola-s
+--
+
+ALTER SEQUENCE public.blog_article_id_seq OWNED BY public.blog_article.id;
+
+
+--
 -- Name: blog_author; Type: TABLE; Schema: public; Owner: mikola-s
 --
 
@@ -252,6 +289,105 @@ ALTER TABLE public.blog_author_user_permissions_id_seq OWNER TO "mikola-s";
 --
 
 ALTER SEQUENCE public.blog_author_user_permissions_id_seq OWNED BY public.blog_author_user_permissions.id;
+
+
+--
+-- Name: blog_comments; Type: TABLE; Schema: public; Owner: mikola-s
+--
+
+CREATE TABLE public.blog_comments (
+    id integer NOT NULL
+);
+
+
+ALTER TABLE public.blog_comments OWNER TO "mikola-s";
+
+--
+-- Name: blog_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: mikola-s
+--
+
+CREATE SEQUENCE public.blog_comments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blog_comments_id_seq OWNER TO "mikola-s";
+
+--
+-- Name: blog_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mikola-s
+--
+
+ALTER SEQUENCE public.blog_comments_id_seq OWNED BY public.blog_comments.id;
+
+
+--
+-- Name: blog_expression; Type: TABLE; Schema: public; Owner: mikola-s
+--
+
+CREATE TABLE public.blog_expression (
+    id integer NOT NULL
+);
+
+
+ALTER TABLE public.blog_expression OWNER TO "mikola-s";
+
+--
+-- Name: blog_expression_id_seq; Type: SEQUENCE; Schema: public; Owner: mikola-s
+--
+
+CREATE SEQUENCE public.blog_expression_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blog_expression_id_seq OWNER TO "mikola-s";
+
+--
+-- Name: blog_expression_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mikola-s
+--
+
+ALTER SEQUENCE public.blog_expression_id_seq OWNED BY public.blog_expression.id;
+
+
+--
+-- Name: blog_expressiontype; Type: TABLE; Schema: public; Owner: mikola-s
+--
+
+CREATE TABLE public.blog_expressiontype (
+    id integer NOT NULL
+);
+
+
+ALTER TABLE public.blog_expressiontype OWNER TO "mikola-s";
+
+--
+-- Name: blog_expressiontype_id_seq; Type: SEQUENCE; Schema: public; Owner: mikola-s
+--
+
+CREATE SEQUENCE public.blog_expressiontype_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blog_expressiontype_id_seq OWNER TO "mikola-s";
+
+--
+-- Name: blog_expressiontype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mikola-s
+--
+
+ALTER SEQUENCE public.blog_expressiontype_id_seq OWNED BY public.blog_expressiontype.id;
 
 
 --
@@ -401,6 +537,13 @@ ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: blog_article id; Type: DEFAULT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_article ALTER COLUMN id SET DEFAULT nextval('public.blog_article_id_seq'::regclass);
+
+
+--
 -- Name: blog_author id; Type: DEFAULT; Schema: public; Owner: mikola-s
 --
 
@@ -419,6 +562,27 @@ ALTER TABLE ONLY public.blog_author_groups ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public.blog_author_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.blog_author_user_permissions_id_seq'::regclass);
+
+
+--
+-- Name: blog_comments id; Type: DEFAULT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_comments ALTER COLUMN id SET DEFAULT nextval('public.blog_comments_id_seq'::regclass);
+
+
+--
+-- Name: blog_expression id; Type: DEFAULT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression ALTER COLUMN id SET DEFAULT nextval('public.blog_expression_id_seq'::regclass);
+
+
+--
+-- Name: blog_expressiontype id; Type: DEFAULT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expressiontype ALTER COLUMN id SET DEFAULT nextval('public.blog_expressiontype_id_seq'::regclass);
 
 
 --
@@ -487,6 +651,31 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 22	Can change session	6	change_session
 23	Can delete session	6	delete_session
 24	Can view session	6	view_session
+25	Can add comments	7	add_comments
+26	Can change comments	7	change_comments
+27	Can delete comments	7	delete_comments
+28	Can view comments	7	view_comments
+29	Can add expression	8	add_expression
+30	Can change expression	8	change_expression
+31	Can delete expression	8	delete_expression
+32	Can view expression	8	view_expression
+33	Can add expression type	9	add_expressiontype
+34	Can change expression type	9	change_expressiontype
+35	Can delete expression type	9	delete_expressiontype
+36	Can view expression type	9	view_expressiontype
+37	Can add article	10	add_article
+38	Can change article	10	change_article
+39	Can delete article	10	delete_article
+40	Can view article	10	view_article
+\.
+
+
+--
+-- Data for Name: blog_article; Type: TABLE DATA; Schema: public; Owner: mikola-s
+--
+
+COPY public.blog_article (id, text, title, post_time, author_id) FROM stdin;
+1	maxim_article1_text	maxim_article1_title	2019-12-29 21:53:35.548509+00	2
 \.
 
 
@@ -496,6 +685,8 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 
 COPY public.blog_author (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, birth_date, create_date_time) FROM stdin;
 1	pbkdf2_sha256$150000$1tX0pQnvAANH$8CTq21t74psphZP0fDBZY9nnSV9uXSHt0FrMgxZ92cg=	2019-12-29 20:01:49.237499+00	t	mikola-s			test@test.com	t	t	2019-12-29 20:01:17.548439+00	\N	2019-12-29 20:01:17.657183+00
+2	1234	2019-12-29 21:51:02+00	f	maxim				f	t	2019-12-29 21:50:25+00	\N	2019-12-29 21:51:12.282528+00
+4	1234	\N	f	irina				f	t	2019-12-30 09:31:28+00	\N	2019-12-30 08:19:55.57557+00
 \.
 
 
@@ -516,10 +707,42 @@ COPY public.blog_author_user_permissions (id, author_id, permission_id) FROM std
 
 
 --
+-- Data for Name: blog_comments; Type: TABLE DATA; Schema: public; Owner: mikola-s
+--
+
+COPY public.blog_comments (id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blog_expression; Type: TABLE DATA; Schema: public; Owner: mikola-s
+--
+
+COPY public.blog_expression (id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: blog_expressiontype; Type: TABLE DATA; Schema: public; Owner: mikola-s
+--
+
+COPY public.blog_expressiontype (id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
 COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2019-12-29 21:51:12.291904+00	2	maxim	1	[{"added": {}}]	1	1
+2	2019-12-29 21:51:41.939467+00	3	irina	1	[{"added": {}}]	1	1
+3	2019-12-29 21:53:35.549727+00	1	Article object (1)	1	[{"added": {}}]	10	1
+4	2019-12-29 21:55:05.584049+00	2	Article object (2)	1	[{"added": {}}]	10	1
+5	2019-12-30 08:18:12.562563+00	3	irina/irina_article2_title	1	[{"added": {}}]	10	1
+6	2019-12-30 08:18:36.784981+00	3	irina	3		1	1
+7	2019-12-30 08:19:55.58293+00	4	irina	1	[{"added": {}}]	1	1
+8	2019-12-30 09:31:41.822054+00	4	irina	2	[{"changed": {"fields": ["date_joined"]}}]	1	1
 \.
 
 
@@ -534,6 +757,10 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 4	auth	group
 5	contenttypes	contenttype
 6	sessions	session
+7	blog	comments
+8	blog	expression
+9	blog	expressiontype
+10	blog	article
 \.
 
 
@@ -560,6 +787,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 16	admin	0002_logentry_remove_auto_add	2019-12-29 19:57:11.157402+00
 17	admin	0003_logentry_add_action_flag_choices	2019-12-29 19:57:11.17868+00
 18	sessions	0001_initial	2019-12-29 19:57:11.237205+00
+19	blog	0002_article_comments_expression_expressiontype	2019-12-29 21:49:28.976646+00
 \.
 
 
@@ -590,7 +818,14 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 24, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 40, true);
+
+
+--
+-- Name: blog_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
+--
+
+SELECT pg_catalog.setval('public.blog_article_id_seq', 3, true);
 
 
 --
@@ -604,7 +839,7 @@ SELECT pg_catalog.setval('public.blog_author_groups_id_seq', 1, false);
 -- Name: blog_author_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_author_id_seq', 1, true);
+SELECT pg_catalog.setval('public.blog_author_id_seq', 4, true);
 
 
 --
@@ -615,24 +850,45 @@ SELECT pg_catalog.setval('public.blog_author_user_permissions_id_seq', 1, false)
 
 
 --
+-- Name: blog_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
+--
+
+SELECT pg_catalog.setval('public.blog_comments_id_seq', 1, false);
+
+
+--
+-- Name: blog_expression_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
+--
+
+SELECT pg_catalog.setval('public.blog_expression_id_seq', 1, false);
+
+
+--
+-- Name: blog_expressiontype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
+--
+
+SELECT pg_catalog.setval('public.blog_expressiontype_id_seq', 1, false);
+
+
+--
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 8, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 6, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 18, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 19, true);
 
 
 --
@@ -684,6 +940,14 @@ ALTER TABLE ONLY public.auth_permission
 
 
 --
+-- Name: blog_article blog_article_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_article
+    ADD CONSTRAINT blog_article_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: blog_author_groups blog_author_groups_author_id_group_id_7ae6db32_uniq; Type: CONSTRAINT; Schema: public; Owner: mikola-s
 --
 
@@ -729,6 +993,30 @@ ALTER TABLE ONLY public.blog_author_user_permissions
 
 ALTER TABLE ONLY public.blog_author
     ADD CONSTRAINT blog_author_username_key UNIQUE (username);
+
+
+--
+-- Name: blog_comments blog_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_comments
+    ADD CONSTRAINT blog_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_expression blog_expression_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_expressiontype blog_expressiontype_pkey; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expressiontype
+    ADD CONSTRAINT blog_expressiontype_pkey PRIMARY KEY (id);
 
 
 --
@@ -797,6 +1085,13 @@ CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_
 --
 
 CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: blog_article_author_id_905add38; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_article_author_id_905add38 ON public.blog_article USING btree (author_id);
 
 
 --
@@ -884,6 +1179,14 @@ ALTER TABLE ONLY public.auth_group_permissions
 
 ALTER TABLE ONLY public.auth_permission
     ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_article blog_article_author_id_905add38_fk_blog_author_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_article
+    ADD CONSTRAINT blog_article_author_id_905add38_fk_blog_author_id FOREIGN KEY (author_id) REFERENCES public.blog_author(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
