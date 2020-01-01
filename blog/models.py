@@ -33,6 +33,19 @@ class Comment(models.Model):
         blank=True,
     )
 
+    @staticmethod
+    def short_comment(text: str):
+        return text if len(text) < 40 else f"{text[:21]}..."
+
+    def __str__(self):
+        comment_from = f"COMMENT ({self.author}/{self.short_comment(self.text)}) "
+        if self.comment is not None:
+            comment_to_comment = f"TO ({self.comment.author}/{self.short_comment(self.comment.text)}) "
+        else:
+            comment_to_comment = " "
+        comment_to_article = f"TO ({self.target.author}/{self.target.title})"
+        return f"{comment_from}{comment_to_comment}{comment_to_article}"
+
 
 class ExpressionType(models.Model):
     name = models.CharField(max_length=20)
@@ -70,7 +83,7 @@ class Expression(models.Model):
         constraints = [
             CheckConstraint(
                 check=Q(comment__isnull=True) & Q(article__isnull=False) |
-                Q(comment__isnull=False) & Q(article__isnull=True),
+                      Q(comment__isnull=False) & Q(article__isnull=True),
                 name='check_expression_target',
             ),
         ]
