@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q, CheckConstraint
 from django.contrib.auth.models import AbstractUser
 
 
@@ -38,4 +39,35 @@ class ExpressionType(models.Model):
 
 
 class Expression(models.Model):
-    pass
+    expression_type = models.ForeignKey(
+        to=ExpressionType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    author = models.ForeignKey(
+        to=Author,
+        on_delete=models.CASCADE,
+    )
+    comment = models.ForeignKey(
+        to=Comment,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    article = models.ForeignKey(
+        to=Article,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        unique_together = ['author', 'comment', 'article']
+        constraints = [
+            CheckConstraint(
+                check=Q(comment__isnull=True) & Q(article__isnull=False) |
+                Q(comment__isnull=False) & Q(article__isnull=True),
+                name='check_expression_target',
+            ),
+        ]
