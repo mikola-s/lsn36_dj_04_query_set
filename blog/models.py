@@ -61,7 +61,7 @@ class Expression(models.Model):
         null=True,
         blank=True,
     )
-    author = models.ForeignKey(
+    expressed = models.ForeignKey(
         to=Author,
         on_delete=models.CASCADE,
     )
@@ -74,16 +74,7 @@ class Expression(models.Model):
     article = models.ForeignKey(
         to=Article,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
     )
 
     class Meta:
-        unique_together = ['author', 'comment', 'article']
-        constraints = [
-            CheckConstraint(
-                check=Q(comment__isnull=True) & Q(article__isnull=False) |
-                      Q(comment__isnull=False) & Q(article__isnull=True),
-                name='check_expression_target',
-            ),
-        ]
+        unique_together = ['expressed', 'comment', 'article']
