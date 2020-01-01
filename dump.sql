@@ -333,7 +333,12 @@ ALTER SEQUENCE public.blog_comments_id_seq OWNED BY public.blog_comment.id;
 --
 
 CREATE TABLE public.blog_expression (
-    id integer NOT NULL
+    id integer NOT NULL,
+    article_id integer,
+    author_id integer NOT NULL,
+    comment_id integer,
+    expression_type_id integer,
+    CONSTRAINT check_expression_target CHECK ((((comment_id IS NULL) AND (article_id IS NOT NULL)) OR ((comment_id IS NOT NULL) AND (article_id IS NULL))))
 );
 
 
@@ -366,7 +371,8 @@ ALTER SEQUENCE public.blog_expression_id_seq OWNED BY public.blog_expression.id;
 --
 
 CREATE TABLE public.blog_expressiontype (
-    id integer NOT NULL
+    id integer NOT NULL,
+    name character varying(20) NOT NULL
 );
 
 
@@ -726,7 +732,7 @@ COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin
 -- Data for Name: blog_expression; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_expression (id) FROM stdin;
+COPY public.blog_expression (id, article_id, author_id, comment_id, expression_type_id) FROM stdin;
 \.
 
 
@@ -734,7 +740,7 @@ COPY public.blog_expression (id) FROM stdin;
 -- Data for Name: blog_expressiontype; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_expressiontype (id) FROM stdin;
+COPY public.blog_expressiontype (id, name) FROM stdin;
 \.
 
 
@@ -798,6 +804,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 19	blog	0002_article_comments_expression_expressiontype	2019-12-29 21:49:28.976646+00
 20	blog	0003_auto_20191230_1247	2019-12-30 10:48:05.40531+00
 21	blog	0004_auto_20191230_1415	2019-12-30 12:16:06.411769+00
+22	blog	0005_auto_20200101_2239	2020-01-01 20:39:49.654445+00
 \.
 
 
@@ -898,7 +905,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 22, true);
 
 
 --
@@ -1011,6 +1018,14 @@ ALTER TABLE ONLY public.blog_author
 
 ALTER TABLE ONLY public.blog_comment
     ADD CONSTRAINT blog_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_expression blog_expression_author_id_comment_id_article_id_95150d9d_uniq; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_author_id_comment_id_article_id_95150d9d_uniq UNIQUE (author_id, comment_id, article_id);
 
 
 --
@@ -1161,6 +1176,34 @@ CREATE INDEX blog_comment_target_id_2462b5da ON public.blog_comment USING btree 
 
 
 --
+-- Name: blog_expression_article_id_879901b1; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_expression_article_id_879901b1 ON public.blog_expression USING btree (article_id);
+
+
+--
+-- Name: blog_expression_author_id_7eec2593; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_expression_author_id_7eec2593 ON public.blog_expression USING btree (author_id);
+
+
+--
+-- Name: blog_expression_comment_id_4d6c8712; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_expression_comment_id_4d6c8712 ON public.blog_expression USING btree (comment_id);
+
+
+--
+-- Name: blog_expression_expression_type_id_592c9141; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_expression_expression_type_id_592c9141 ON public.blog_expression USING btree (expression_type_id);
+
+
+--
 -- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: mikola-s
 --
 
@@ -1274,6 +1317,38 @@ ALTER TABLE ONLY public.blog_comment
 
 ALTER TABLE ONLY public.blog_comment
     ADD CONSTRAINT blog_comment_target_id_2462b5da_fk_blog_article_id FOREIGN KEY (target_id) REFERENCES public.blog_article(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_expression blog_expression_article_id_879901b1_fk_blog_article_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_article_id_879901b1_fk_blog_article_id FOREIGN KEY (article_id) REFERENCES public.blog_article(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_expression blog_expression_author_id_7eec2593_fk_blog_author_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_author_id_7eec2593_fk_blog_author_id FOREIGN KEY (author_id) REFERENCES public.blog_author(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_expression blog_expression_comment_id_4d6c8712_fk_blog_comment_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_comment_id_4d6c8712_fk_blog_comment_id FOREIGN KEY (comment_id) REFERENCES public.blog_comment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_expression blog_expression_expression_type_id_592c9141_fk_blog_expr; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_expression_type_id_592c9141_fk_blog_expr FOREIGN KEY (expression_type_id) REFERENCES public.blog_expressiontype(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
