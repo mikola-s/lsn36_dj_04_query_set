@@ -334,11 +334,10 @@ ALTER SEQUENCE public.blog_comments_id_seq OWNED BY public.blog_comment.id;
 
 CREATE TABLE public.blog_expression (
     id integer NOT NULL,
-    article_id integer,
-    author_id integer NOT NULL,
+    article_id integer NOT NULL,
     comment_id integer,
-    expression_type_id integer,
-    CONSTRAINT check_expression_target CHECK ((((comment_id IS NULL) AND (article_id IS NOT NULL)) OR ((comment_id IS NOT NULL) AND (article_id IS NULL))))
+    expressed_id integer NOT NULL,
+    expression_type_id integer
 );
 
 
@@ -689,7 +688,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.blog_article (id, text, title, post_time, author_id) FROM stdin;
-1	maxim_article1_text	maxim_article1_title	2019-12-29 21:53:35.548509+00	2
+6	article2_text	article2_title	2020-01-01 21:00:57.019696+00	2
+5	article2_text	article2_title	2020-01-01 21:00:18.12821+00	4
+4	article1_text	article1_title	2020-01-01 20:59:56.416253+00	4
+1	article1_text	article1_title	2019-12-29 21:53:35.548509+00	2
 \.
 
 
@@ -698,9 +700,12 @@ COPY public.blog_article (id, text, title, post_time, author_id) FROM stdin;
 --
 
 COPY public.blog_author (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, birth_date, create_date_time) FROM stdin;
-1	pbkdf2_sha256$150000$1tX0pQnvAANH$8CTq21t74psphZP0fDBZY9nnSV9uXSHt0FrMgxZ92cg=	2019-12-29 20:01:49.237499+00	t	mikola-s			test@test.com	t	t	2019-12-29 20:01:17.548439+00	\N	2019-12-29 20:01:17.657183+00
 2	1234	2019-12-29 21:51:02+00	f	maxim				f	t	2019-12-29 21:50:25+00	\N	2019-12-29 21:51:12.282528+00
 4	1234	\N	f	irina				f	t	2019-12-30 09:31:28+00	\N	2019-12-30 08:19:55.57557+00
+1	pbkdf2_sha256$150000$1tX0pQnvAANH$8CTq21t74psphZP0fDBZY9nnSV9uXSHt0FrMgxZ92cg=	2020-01-01 20:53:50.903988+00	t	mikola-s			test@test.com	t	t	2019-12-29 20:01:17.548439+00	\N	2019-12-29 20:01:17.657183+00
+5	1234	\N	f	user1				f	t	2020-01-01 21:01:39+00	\N	2020-01-01 21:02:18.953329+00
+6	1234	\N	f	user2				f	t	2020-01-01 21:02:19+00	\N	2020-01-01 21:02:33.664782+00
+7	1234	\N	f	user3				f	t	2020-01-01 21:02:33+00	\N	2020-01-01 21:02:46.749545+00
 \.
 
 
@@ -725,6 +730,10 @@ COPY public.blog_author_user_permissions (id, author_id, permission_id) FROM std
 --
 
 COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin;
+4	5	2	4	comment to comment user2
+3	7	\N	4	comment to irina article1
+2	6	\N	4	comment to irina article1
+1	5	\N	4	comment to irina article1
 \.
 
 
@@ -732,7 +741,7 @@ COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin
 -- Data for Name: blog_expression; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_expression (id, article_id, author_id, comment_id, expression_type_id) FROM stdin;
+COPY public.blog_expression (id, article_id, comment_id, expressed_id, expression_type_id) FROM stdin;
 \.
 
 
@@ -741,6 +750,8 @@ COPY public.blog_expression (id, article_id, author_id, comment_id, expression_t
 --
 
 COPY public.blog_expressiontype (id, name) FROM stdin;
+1	
+2	
 \.
 
 
@@ -757,6 +768,28 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 6	2019-12-30 08:18:36.784981+00	3	irina	3		1	1
 7	2019-12-30 08:19:55.58293+00	4	irina	1	[{"added": {}}]	1	1
 8	2019-12-30 09:31:41.822054+00	4	irina	2	[{"changed": {"fields": ["date_joined"]}}]	1	1
+9	2020-01-01 20:54:08.465072+00	1	ExpressionType object (1)	1	[{"added": {}}]	9	1
+10	2020-01-01 20:54:25.62338+00	2	ExpressionType object (2)	1	[{"added": {}}]	9	1
+11	2020-01-01 20:59:56.41734+00	4	irina/iruna_article1_title	1	[{"added": {}}]	10	1
+12	2020-01-01 21:00:18.129462+00	5	irina/iruna_article2_title	1	[{"added": {}}]	10	1
+13	2020-01-01 21:00:57.020703+00	6	maxim/maxim_article2_title	1	[{"added": {}}]	10	1
+14	2020-01-01 21:02:18.977827+00	5	user1	1	[{"added": {}}]	1	1
+15	2020-01-01 21:02:33.670995+00	6	user2	1	[{"added": {}}]	1	1
+16	2020-01-01 21:02:46.754804+00	7	user3	1	[{"added": {}}]	1	1
+17	2020-01-01 21:05:54.627003+00	1	Comment object (1)	1	[{"added": {}}]	7	1
+18	2020-01-01 21:06:11.866008+00	2	Comment object (2)	1	[{"added": {}}]	7	1
+19	2020-01-01 21:06:34.233279+00	3	Comment object (3)	1	[{"added": {}}]	7	1
+20	2020-01-01 21:44:33.181474+00	4	COMMENT (user1/comment to comment user2) TO (user2/user2 comment to irina article1) TO (irina/iruna_article1_title)	1	[{"added": {}}]	7	1
+21	2020-01-01 21:44:50.919082+00	3	COMMENT (user3/comment to irina article1)  TO (irina/iruna_article1_title)	2	[{"changed": {"fields": ["text"]}}]	7	1
+22	2020-01-01 21:44:58.724476+00	2	COMMENT (user2/comment to irina article1)  TO (irina/iruna_article1_title)	2	[{"changed": {"fields": ["text"]}}]	7	1
+23	2020-01-01 21:45:06.258241+00	1	COMMENT (user1/comment to irina article1)  TO (irina/iruna_article1_title)	2	[{"changed": {"fields": ["text"]}}]	7	1
+24	2020-01-01 21:47:01.039629+00	6	maxim/maxim_article2_title	2	[{"changed": {"fields": ["text"]}}]	10	1
+25	2020-01-01 21:47:24.554113+00	6	maxim/article2_title	2	[{"changed": {"fields": ["title"]}}]	10	1
+26	2020-01-01 21:47:38.020001+00	5	irina/article2_title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
+27	2020-01-01 21:47:48.029694+00	4	irina/article1_title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
+28	2020-01-01 21:47:56.502767+00	1	maxim/article1_title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
+29	2020-01-01 21:49:05.419501+00	1	Expression object (1)	1	[{"added": {}}]	8	1
+30	2020-01-01 21:49:42.773645+00	1	Expression object (1)	2	[{"changed": {"fields": ["comment", "article"]}}]	8	1
 \.
 
 
@@ -805,6 +838,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 20	blog	0003_auto_20191230_1247	2019-12-30 10:48:05.40531+00
 21	blog	0004_auto_20191230_1415	2019-12-30 12:16:06.411769+00
 22	blog	0005_auto_20200101_2239	2020-01-01 20:39:49.654445+00
+23	blog	0006_auto_20200101_2355	2020-01-01 21:55:43.090114+00
+24	blog	0005_auto_20200102_0009	2020-01-01 22:14:19.882368+00
+25	blog	0006_auto_20200102_0907	2020-01-02 07:08:13.555453+00
 \.
 
 
@@ -814,6 +850,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 vi8uk0od3vkz3x3k6i90c61a7qo8gdhh	MmMxMTA0ZWI3NjRhMWJiNzE1NjIzNTYxNjFlZjMzMjhlNTJhYzBmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzMzOGEyNDkxNjE0Y2I1ZDA5Yzg4YmVmOTdhMGJiOWMwNWE1M2FjIn0=	2020-01-12 20:01:49.260444+00
+l5xbh6rfrd5tc1lub01wsoniw3ihptni	MmMxMTA0ZWI3NjRhMWJiNzE1NjIzNTYxNjFlZjMzMjhlNTJhYzBmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzMzOGEyNDkxNjE0Y2I1ZDA5Yzg4YmVmOTdhMGJiOWMwNWE1M2FjIn0=	2020-01-15 20:53:50.918324+00
 \.
 
 
@@ -842,7 +879,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 44, true);
 -- Name: blog_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_article_id_seq', 3, true);
+SELECT pg_catalog.setval('public.blog_article_id_seq', 6, true);
 
 
 --
@@ -856,7 +893,7 @@ SELECT pg_catalog.setval('public.blog_author_groups_id_seq', 1, false);
 -- Name: blog_author_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_author_id_seq', 4, true);
+SELECT pg_catalog.setval('public.blog_author_id_seq', 7, true);
 
 
 --
@@ -870,28 +907,28 @@ SELECT pg_catalog.setval('public.blog_author_user_permissions_id_seq', 1, false)
 -- Name: blog_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_comments_id_seq', 1, false);
+SELECT pg_catalog.setval('public.blog_comments_id_seq', 4, true);
 
 
 --
 -- Name: blog_expression_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_expression_id_seq', 1, false);
+SELECT pg_catalog.setval('public.blog_expression_id_seq', 1, true);
 
 
 --
 -- Name: blog_expressiontype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_expressiontype_id_seq', 1, false);
+SELECT pg_catalog.setval('public.blog_expressiontype_id_seq', 2, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 8, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 30, true);
 
 
 --
@@ -905,7 +942,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 22, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 25, true);
 
 
 --
@@ -1021,11 +1058,11 @@ ALTER TABLE ONLY public.blog_comment
 
 
 --
--- Name: blog_expression blog_expression_author_id_comment_id_article_id_95150d9d_uniq; Type: CONSTRAINT; Schema: public; Owner: mikola-s
+-- Name: blog_expression blog_expression_expressed_id_comment_id__2d23a764_uniq; Type: CONSTRAINT; Schema: public; Owner: mikola-s
 --
 
 ALTER TABLE ONLY public.blog_expression
-    ADD CONSTRAINT blog_expression_author_id_comment_id_article_id_95150d9d_uniq UNIQUE (author_id, comment_id, article_id);
+    ADD CONSTRAINT blog_expression_expressed_id_comment_id__2d23a764_uniq UNIQUE (expressed_id, comment_id, article_id);
 
 
 --
@@ -1183,17 +1220,17 @@ CREATE INDEX blog_expression_article_id_879901b1 ON public.blog_expression USING
 
 
 --
--- Name: blog_expression_author_id_7eec2593; Type: INDEX; Schema: public; Owner: mikola-s
---
-
-CREATE INDEX blog_expression_author_id_7eec2593 ON public.blog_expression USING btree (author_id);
-
-
---
 -- Name: blog_expression_comment_id_4d6c8712; Type: INDEX; Schema: public; Owner: mikola-s
 --
 
 CREATE INDEX blog_expression_comment_id_4d6c8712 ON public.blog_expression USING btree (comment_id);
+
+
+--
+-- Name: blog_expression_expressed_id_86322a03; Type: INDEX; Schema: public; Owner: mikola-s
+--
+
+CREATE INDEX blog_expression_expressed_id_86322a03 ON public.blog_expression USING btree (expressed_id);
 
 
 --
@@ -1328,19 +1365,19 @@ ALTER TABLE ONLY public.blog_expression
 
 
 --
--- Name: blog_expression blog_expression_author_id_7eec2593_fk_blog_author_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
---
-
-ALTER TABLE ONLY public.blog_expression
-    ADD CONSTRAINT blog_expression_author_id_7eec2593_fk_blog_author_id FOREIGN KEY (author_id) REFERENCES public.blog_author(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: blog_expression blog_expression_comment_id_4d6c8712_fk_blog_comment_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
 --
 
 ALTER TABLE ONLY public.blog_expression
     ADD CONSTRAINT blog_expression_comment_id_4d6c8712_fk_blog_comment_id FOREIGN KEY (comment_id) REFERENCES public.blog_comment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: blog_expression blog_expression_expressed_id_86322a03_fk_blog_author_id; Type: FK CONSTRAINT; Schema: public; Owner: mikola-s
+--
+
+ALTER TABLE ONLY public.blog_expression
+    ADD CONSTRAINT blog_expression_expressed_id_86322a03_fk_blog_author_id FOREIGN KEY (expressed_id) REFERENCES public.blog_author(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
