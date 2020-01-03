@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q, CheckConstraint
+from django.db.models import Q, F, CheckConstraint
 from django.contrib.auth.models import AbstractUser
 
 
@@ -38,13 +38,21 @@ class Comment(models.Model):
         return text if len(text) < 40 else f"{text[:21]}..."
 
     def __str__(self):
-        comment_from = f"COMMENT ({self.author}/{self.short_comment(self.text)}) "
+        comment_from = f"COMMENT {self.id} ({self.author}/{self.short_comment(self.text)}) "
         if self.comment is not None:
-            comment_to_comment = f"TO ({self.comment.author}/{self.short_comment(self.comment.text)}) "
+            comment_to_comment = f"TO COMMENT {self.comment_id} " \
+                                 f"({self.comment.author}/{self.short_comment(self.comment.text)}) "
         else:
             comment_to_comment = " "
-        comment_to_article = f"TO ({self.target.author}/{self.target.title})"
+        comment_to_article = f"TO ARTICLE {self.target_id} ({self.target.author}/{self.target.title})"
         return f"{comment_from}{comment_to_comment}{comment_to_article}"
+
+    # class Meta:
+    #     constraints = [
+    #         CheckConstraint(
+    #             check=Q(comment__isnull=False) & Q(comment__target__id__exact=F('target__id')),
+    #             name='comments_to_right_articles')
+    #     ]
 
 
 class ExpressionType(models.Model):
@@ -77,4 +85,4 @@ class Expression(models.Model):
     )
 
     class Meta:
-        unique_together = ['expressed', 'comment', 'article']
+        unique_together = [('expressed', 'comment', 'article'), ]
