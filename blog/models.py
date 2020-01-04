@@ -7,6 +7,16 @@ def short_comment(text: str):
     return text if len(text) < 40 else f"{text[:21]}..."
 
 
+def make_end_str(article, comment):
+    if comment is not None:
+        comment_to_comment = f"TO COMMENT {comment.id} " \
+                             f"({comment.author}/{short_comment(comment.text)}) "
+    else:
+        comment_to_comment = " "
+    comment_to_article = f"TO ARTICLE {article.id} ({article.author}/{article.title})"
+    return f"{comment_to_comment}{comment_to_article}"
+
+
 class Author(AbstractUser):
     birth_date = models.DateField(null=True, blank=True)
     create_date_time = models.DateTimeField(auto_now_add=True)
@@ -39,15 +49,9 @@ class Comment(models.Model):
 
     def __str__(self):
         comment_from = f"COMMENT {self.id} ({self.author}/{short_comment(self.text)}) "
-        if self.comment is not None:
-            comment_to_comment = f"TO COMMENT {self.comment_id} " \
-                                 f"({self.comment.author}/{short_comment(self.comment.text)}) "
-        else:
-            comment_to_comment = " "
-        comment_to_article = f"TO ARTICLE {self.target_id} ({self.target.author}/{self.target.title})"
-        return f"{comment_from}{comment_to_comment}{comment_to_article}"
+        return f"{comment_from}{make_end_str(self.target, self.comment)}"
 
-    # class Meta: # не работает
+    # class Meta: # пока не работает
     #     constraints = [
     #         CheckConstraint(
     #             check=Q(comment__isnull=False) & Q(comment__target__id__exact=F('target__id')),
@@ -85,14 +89,8 @@ class Expression(models.Model):
     )
 
     def __str__(self):
-        expression_from = f"EXPRESSION {self.id} ({self.expression_type.name}/{self.expressed.username})  "
-        if self.comment is not None:
-            comment_to_comment = f"TO COMMENT {self.comment_id} " \
-                                 f"({self.comment.author}/{short_comment(self.comment.text)}) "
-        else:
-            comment_to_comment = " "
-        comment_to_article = f"TO ARTICLE {self.article_id} ({self.article.author}/{self.article.title})"
-        return f"{expression_from}{comment_to_comment}{comment_to_article}"
+        expression_from = f"EXPRESSION {self.id} ({self.expression_type.name}/{self.expressed.username}) "
+        return f"{expression_from}{make_end_str(self.article, self.comment)}"
 
     class Meta:
         unique_together = [('expressed', 'comment', 'article'), ]
