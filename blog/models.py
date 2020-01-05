@@ -4,15 +4,17 @@ from django.contrib.auth.models import AbstractUser
 
 
 def short_comment(text: str):
+    """ short comment for verbose __str__() """
     return text if len(text) < 40 else f"{text[:21]}..."
 
 
 def make_end_str(article, comment):
+    """ for comments & expression __str__()"""
     if comment is not None:
         comment_to_comment = f"TO COMMENT {comment.id} " \
                              f"({comment.author}/{short_comment(comment.text)}) "
     else:
-        comment_to_comment = " "
+        comment_to_comment = ""
     comment_to_article = f"TO ARTICLE {article.id} ({article.author}/{article.title})"
     return f"{comment_to_comment}{comment_to_article}"
 
