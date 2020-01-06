@@ -30,11 +30,11 @@ qs = Comment.objects.filter(pk__lte=3)
 
 # task 01 07
 
-qs = Comment.objects.filter(author__article__expression__isnull=True)
+qs = Comment.objects.filter(pk__gt=3).order_by('pk')
 
 # task 01 08
 
-qs = Comment.objects.filter(author__article__expression__isnull=True)
+qs = Comment.objects.exclude(target__author='irina')
 
 # task 01 09
 
