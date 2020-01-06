@@ -42,6 +42,6 @@ qs = Comment.objects.filter(text__contains='user2')
 
 # task 01 10
 
-qs = Comment.objects.filter(author__article__expression__isnull=True)
+qs = Comment.objects.filter(target__author__username='irina').order_by('pk')
 
 
