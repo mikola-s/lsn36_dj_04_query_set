@@ -34,14 +34,23 @@
 
 ##### 1.06 
 
+![](static/img/lsn36_task_01_06.png)
+
 ##### 1.07 
+
+![](static/img/lsn36_task_01_07.png)
 
 ##### 1.08 
 
+![](static/img/lsn36_task_01_08.png)
+
 ##### 1.09 
+
+![](static/img/lsn36_task_01_09.png)
 
 ##### 1.10
 
+![](static/img/lsn36_task_01_10.png)
 
 #### 2. Получить 5 последних написанных коментариев (именно текст).
 
