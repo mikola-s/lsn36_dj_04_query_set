@@ -40,6 +40,7 @@ class Article(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(to=Author, on_delete=models.CASCADE)
     text = models.TextField(max_length=1024)
+    post_time = models.DateTimeField(auto_now_add=True)
     target = models.ForeignKey(to=Article, on_delete=models.CASCADE)
     comment = models.ForeignKey(
         to='blog.Comment',
@@ -79,6 +80,7 @@ class Expression(models.Model):
         to=Author,
         on_delete=models.CASCADE,
     )
+    post_time = models.DateTimeField(auto_now_add=True)
     comment = models.ForeignKey(
         to=Comment,
         on_delete=models.CASCADE,
