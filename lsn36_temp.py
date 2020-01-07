@@ -71,3 +71,20 @@ Comment.objects.create(
 start = Comment.objects.filter(text__contains='Start').update(text="Start is update")
 middle = Comment.objects.filter(text__contains='Middle').update(text="Middle is update")
 finish = Comment.objects.filter(text__contains='Finish').update(text="Finish is update")
+
+qs = Comment.objects.filter(text__contains='k').
+print(*qs, sep='\n')
+qs = qs.exclude(text__contains='c')
+
+qs = Comment.objects.order_by('target__author__username').last()
+
+ar = Article.objects.order_by('author__username').last()
+
+qs = Comment.objects.filter(target__author__username=Comment.objects.order_by('target__author__username').last())
+qs = Comment.objects.order_by('target__author__username').filter(target__author__username=Comment.objects.order_by('target__author__username').last())
+
+qs = Comment.objects.order_by('target__author__username').last()
+qs.ta
+
+last_author = Comment.objects.order_by('target__author__username').last().target.author.username
+qs = Comment.objects.filter(target__author__username=last_author).order_by('post_time')[:2:]
