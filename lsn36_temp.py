@@ -66,3 +66,8 @@ Comment.objects.create(
     text='one year before',
     target=Article.objects.get(pk=1)
 )
+
+
+start = Comment.objects.filter(text__contains='Start').update(text="Start is update")
+middle = Comment.objects.filter(text__contains='Middle').update(text="Middle is update")
+finish = Comment.objects.filter(text__contains='Finish').update(text="Finish is update")
