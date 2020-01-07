@@ -1,5 +1,10 @@
 from django.db import *
 from blog.models import Comment, Author, Article
+from django.db.models import Q, F, CheckConstraint
+from django.utils import timezone
+from django.utils.timezone import now
+from datetime import timedelta
+
 
 qs_all = Comment.objects.all().order_by('pk')
 print(qs_all, sep='\n')
@@ -34,7 +39,7 @@ qs = Comment.objects.filter(pk__gt=3).order_by('pk')
 
 # task 01 08
 
-qs = Comment.objects.filter(pk__range=[1,3])
+qs = Comment.objects.filter(pk__range=[1, 3])
 
 # task 01 09
 
@@ -45,3 +50,19 @@ qs = Comment.objects.filter(text__contains='user2')
 qs = Comment.objects.filter(target__author__username='irina').order_by('pk')
 
 
+Comment.objects.create(author=Author.objects.get(username="irina"), text='one year before', target=Article.objects.get(pk=1))
+
+
+qs = Comment.objects.get(pk=15).post_time.replace(year=2019)
+
+# def save(self, **kwargs):
+#     if not self.pk:
+#         self.post_time = timezone.now() - timedelta(days=365)
+#     super().save(**kwargs)
+
+
+Comment.objects.create(
+    author=Author.objects.get(username="irina"),
+    text='one year before',
+    target=Article.objects.get(pk=1)
+)

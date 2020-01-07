@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Q, F, CheckConstraint
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from datetime import timedelta
 
 
 def short_comment(text: str):
@@ -40,7 +42,7 @@ class Article(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(to=Author, on_delete=models.CASCADE)
     text = models.TextField(max_length=1024)
-    post_time = models.DateTimeField(auto_now_add=True)
+    post_time = models.DateTimeField(default=timezone.now(), editable=True)
     target = models.ForeignKey(to=Article, on_delete=models.CASCADE)
     comment = models.ForeignKey(
         to='blog.Comment',
@@ -54,12 +56,10 @@ class Comment(models.Model):
         comment_from = f"COMMENT {self.id} ({self.author}/{short_comment(self.text)}) "
         return f"{comment_from}{make_end_str(self.target, self.comment)}"
 
-    # class Meta: # пока не работает
-    #     constraints = [
-    #         CheckConstraint(
-    #             check=Q(comment__isnull=False) & Q(comment__target__id__exact=F('target__id')),
-    #             name='comments_to_right_articles')
-    #     ]
+    def save(self, **kwargs):
+        if not self.pk:
+            self.post_time = timezone.now() - timedelta(days=365)
+        super().save(**kwargs)
 
 
 class ExpressionType(models.Model):
