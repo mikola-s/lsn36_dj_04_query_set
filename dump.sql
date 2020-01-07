@@ -300,7 +300,8 @@ CREATE TABLE public.blog_comment (
     author_id integer NOT NULL,
     comment_id integer,
     target_id integer NOT NULL,
-    text text NOT NULL
+    text text NOT NULL,
+    post_time timestamp with time zone NOT NULL
 );
 
 
@@ -337,7 +338,8 @@ CREATE TABLE public.blog_expression (
     article_id integer NOT NULL,
     comment_id integer,
     expressed_id integer NOT NULL,
-    expression_type_id integer
+    expression_type_id integer,
+    post_time timestamp with time zone NOT NULL
 );
 
 
@@ -688,10 +690,13 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.blog_article (id, text, title, post_time, author_id) FROM stdin;
-6	article2_text	article2_title	2020-01-01 21:00:57.019696+00	2
-5	article2_text	article2_title	2020-01-01 21:00:18.12821+00	4
 4	article1_text	article1_title	2020-01-01 20:59:56.416253+00	4
 1	article1_text	article1_title	2019-12-29 21:53:35.548509+00	2
+7	atricle user1	user1.article.title	2020-01-02 07:14:42.469019+00	5
+6	article2.text	article2.title	2020-01-01 21:00:57.019696+00	2
+5	article2.text	article2.title	2020-01-01 21:00:18.12821+00	4
+8	user2.article.text	user2.article.title	2020-01-02 07:16:13.157623+00	6
+9	user3.article.text	user3.article.title	2020-01-02 07:16:48.676029+00	7
 \.
 
 
@@ -702,10 +707,10 @@ COPY public.blog_article (id, text, title, post_time, author_id) FROM stdin;
 COPY public.blog_author (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, birth_date, create_date_time) FROM stdin;
 2	1234	2019-12-29 21:51:02+00	f	maxim				f	t	2019-12-29 21:50:25+00	\N	2019-12-29 21:51:12.282528+00
 4	1234	\N	f	irina				f	t	2019-12-30 09:31:28+00	\N	2019-12-30 08:19:55.57557+00
-1	pbkdf2_sha256$150000$1tX0pQnvAANH$8CTq21t74psphZP0fDBZY9nnSV9uXSHt0FrMgxZ92cg=	2020-01-01 20:53:50.903988+00	t	mikola-s			test@test.com	t	t	2019-12-29 20:01:17.548439+00	\N	2019-12-29 20:01:17.657183+00
 5	1234	\N	f	user1				f	t	2020-01-01 21:01:39+00	\N	2020-01-01 21:02:18.953329+00
 6	1234	\N	f	user2				f	t	2020-01-01 21:02:19+00	\N	2020-01-01 21:02:33.664782+00
 7	1234	\N	f	user3				f	t	2020-01-01 21:02:33+00	\N	2020-01-01 21:02:46.749545+00
+1	pbkdf2_sha256$150000$1tX0pQnvAANH$8CTq21t74psphZP0fDBZY9nnSV9uXSHt0FrMgxZ92cg=	2020-01-02 07:12:16.503068+00	t	mikola-s			test@test.com	t	t	2019-12-29 20:01:17.548439+00	\N	2019-12-29 20:01:17.657183+00
 \.
 
 
@@ -729,11 +734,33 @@ COPY public.blog_author_user_permissions (id, author_id, permission_id) FROM std
 -- Data for Name: blog_comment; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin;
-4	5	2	4	comment to comment user2
-3	7	\N	4	comment to irina article1
-2	6	\N	4	comment to irina article1
-1	5	\N	4	comment to irina article1
+COPY public.blog_comment (id, author_id, comment_id, target_id, text, post_time) FROM stdin;
+4	5	2	4	comment to comment user2	2020-01-06 11:53:58.121909+00
+3	7	\N	4	comment to irina article1	2020-01-06 11:53:58.121909+00
+2	6	\N	4	comment to irina article1	2020-01-06 11:53:58.121909+00
+1	5	\N	4	comment to irina article1	2020-01-06 11:53:58.121909+00
+5	7	\N	5	comment to irina article 2	2020-01-06 11:53:58.121909+00
+11	4	\N	7	 to generate Lorem Ipsum which looks reasonable	2020-01-06 13:26:20.83088+00
+12	7	\N	1	Lorem Ipsum comes from sections 1.10.32 and 1.10.33	2020-01-06 13:26:20.830911+00
+15	4	\N	1	one year before Ipsum comes from sections 1.10.32 and 1.10.33	2020-01-06 21:16:05.661474+00
+17	4	\N	1	one year before Ipsum comes from sections 1.10.32 and 1.10.33	2020-01-06 21:23:37.580229+00
+18	4	\N	1	one year and 	2020-01-06 21:31:36.807181+00
+19	4	\N	1	one year and 	2019-01-06 21:36:37.349909+00
+20	4	\N	1	one year and 	2019-01-06 21:36:37.349909+00
+22	4	\N	1	one year and 	2020-01-06 21:44:40.68847+00
+24	4	\N	1	one year before	2019-01-07 18:10:35.134591+00
+8	5	\N	4	Start is update	2020-01-06 13:26:20.830757+00
+9	6	\N	5	Middle is update	2020-01-06 13:26:20.830814+00
+10	2	\N	6	Finish is update	2020-01-06 13:26:20.830849+00
+16	4	\N	1	one year before Ipsum comes k sections 1.10.32 and 1.10.33	2020-01-06 21:21:24.797337+00
+25	2	\N	9	text to user 3 article	2019-01-07 20:16:34.638473+00
+26	4	\N	9	comment to user 3 article	2019-01-07 20:18:24.127681+00
+27	5	26	9	comment to user 3 article	2019-01-07 20:19:10.30133+00
+28	6	\N	9	comment to user 3 article	2019-01-07 20:23:42.929193+00
+29	4	\N	1	one year before	2019-01-07 21:28:06.004106+00
+30	4	\N	1	one year before	2019-01-07 21:28:23.373587+00
+31	4	\N	1	one year before	2019-01-07 21:29:40.800626+00
+32	4	\N	1	one year before	2019-01-07 21:30:12.127945+00
 \.
 
 
@@ -741,7 +768,10 @@ COPY public.blog_comment (id, author_id, comment_id, target_id, text) FROM stdin
 -- Data for Name: blog_expression; Type: TABLE DATA; Schema: public; Owner: mikola-s
 --
 
-COPY public.blog_expression (id, article_id, comment_id, expressed_id, expression_type_id) FROM stdin;
+COPY public.blog_expression (id, article_id, comment_id, expressed_id, expression_type_id, post_time) FROM stdin;
+2	7	4	4	3	2020-01-06 11:53:58.311578+00
+3	4	\N	5	3	2020-01-06 11:53:58.311578+00
+4	4	\N	7	4	2020-01-06 11:53:58.311578+00
 \.
 
 
@@ -750,8 +780,8 @@ COPY public.blog_expression (id, article_id, comment_id, expressed_id, expressio
 --
 
 COPY public.blog_expressiontype (id, name) FROM stdin;
-1	
-2	
+3	like
+4	dislike
 \.
 
 
@@ -790,6 +820,25 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 28	2020-01-01 21:47:56.502767+00	1	maxim/article1_title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
 29	2020-01-01 21:49:05.419501+00	1	Expression object (1)	1	[{"added": {}}]	8	1
 30	2020-01-01 21:49:42.773645+00	1	Expression object (1)	2	[{"changed": {"fields": ["comment", "article"]}}]	8	1
+31	2020-01-02 07:12:37.300644+00	2		3		9	1
+32	2020-01-02 07:12:37.314042+00	1		3		9	1
+33	2020-01-02 07:12:45.289646+00	3	like	1	[{"added": {}}]	9	1
+34	2020-01-02 07:12:56.860377+00	4	dislike	1	[{"added": {}}]	9	1
+35	2020-01-02 07:14:42.470155+00	7	user1/user1.article.title	1	[{"added": {}}]	10	1
+36	2020-01-02 07:15:08.649962+00	6	maxim/article2.title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
+37	2020-01-02 07:15:23.163316+00	5	irina/article2.title	2	[{"changed": {"fields": ["text", "title"]}}]	10	1
+38	2020-01-02 07:16:13.158442+00	8	user2/user2.article.title	1	[{"added": {}}]	10	1
+39	2020-01-02 07:16:48.676967+00	9	user3/user3.article.title	1	[{"added": {}}]	10	1
+40	2020-01-02 07:26:42.451329+00	5	COMMENT 5 (user3/comment to irina article 2)  TO ARTICLE 5 (irina/article2.title)	1	[{"added": {}}]	7	1
+41	2020-01-02 08:15:36.669782+00	6	COMMENT 6 (user1/111) TO COMMENT 4 (user1/comment to comment user2) TO ARTICLE 5 (irina/article2.title)	1	[{"added": {}}]	7	1
+42	2020-01-02 08:15:55.561311+00	6	COMMENT 6 (user1/111) TO COMMENT 4 (user1/comment to comment user2) TO ARTICLE 5 (irina/article2.title)	3		7	1
+43	2020-01-03 15:05:52.678776+00	2	Expression object (2)	1	[{"added": {}}]	8	1
+44	2020-01-03 15:19:49.097316+00	3	EXPRESSION 3 (like/user1)   TO ARTICLE 4 (irina/article1_title)	1	[{"added": {}}]	8	1
+45	2020-01-05 10:06:48.657098+00	4	EXPRESSION 4 (dislike/user3)  TO ARTICLE 4 (irina/article1_title)	1	[{"added": {}}]	8	1
+46	2020-01-07 20:16:34.641153+00	25	COMMENT 25 (maxim/text to user 3 article) TO ARTICLE 9 (user3/user3.article.title)	1	[{"added": {}}]	7	1
+47	2020-01-07 20:18:24.130284+00	26	COMMENT 26 (irina/comment to user 3 article) TO ARTICLE 9 (user3/user3.article.title)	1	[{"added": {}}]	7	1
+48	2020-01-07 20:19:10.305435+00	27	COMMENT 27 (user1/comment to user 3 article) TO COMMENT 26 (irina/comment to user 3 article) TO ARTICLE 9 (user3/user3.article.title)	1	[{"added": {}}]	7	1
+49	2020-01-07 20:23:42.931936+00	28	COMMENT 28 (user2/comment to user 3 article) TO ARTICLE 9 (user3/user3.article.title)	1	[{"added": {}}]	7	1
 \.
 
 
@@ -841,6 +890,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 23	blog	0006_auto_20200101_2355	2020-01-01 21:55:43.090114+00
 24	blog	0005_auto_20200102_0009	2020-01-01 22:14:19.882368+00
 25	blog	0006_auto_20200102_0907	2020-01-02 07:08:13.555453+00
+26	blog	0007_auto_20200102_1018	2020-01-02 08:18:26.315254+00
+27	blog	0007_auto_20200106_1353	2020-01-06 11:53:58.493951+00
 \.
 
 
@@ -851,6 +902,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 vi8uk0od3vkz3x3k6i90c61a7qo8gdhh	MmMxMTA0ZWI3NjRhMWJiNzE1NjIzNTYxNjFlZjMzMjhlNTJhYzBmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzMzOGEyNDkxNjE0Y2I1ZDA5Yzg4YmVmOTdhMGJiOWMwNWE1M2FjIn0=	2020-01-12 20:01:49.260444+00
 l5xbh6rfrd5tc1lub01wsoniw3ihptni	MmMxMTA0ZWI3NjRhMWJiNzE1NjIzNTYxNjFlZjMzMjhlNTJhYzBmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzMzOGEyNDkxNjE0Y2I1ZDA5Yzg4YmVmOTdhMGJiOWMwNWE1M2FjIn0=	2020-01-15 20:53:50.918324+00
+bvvedd4g2p9m3ywl58fekp0bvmlssqk6	MmMxMTA0ZWI3NjRhMWJiNzE1NjIzNTYxNjFlZjMzMjhlNTJhYzBmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNzMzOGEyNDkxNjE0Y2I1ZDA5Yzg4YmVmOTdhMGJiOWMwNWE1M2FjIn0=	2020-01-16 07:12:16.51506+00
 \.
 
 
@@ -879,7 +931,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 44, true);
 -- Name: blog_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_article_id_seq', 6, true);
+SELECT pg_catalog.setval('public.blog_article_id_seq', 9, true);
 
 
 --
@@ -907,28 +959,28 @@ SELECT pg_catalog.setval('public.blog_author_user_permissions_id_seq', 1, false)
 -- Name: blog_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_comments_id_seq', 4, true);
+SELECT pg_catalog.setval('public.blog_comments_id_seq', 32, true);
 
 
 --
 -- Name: blog_expression_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_expression_id_seq', 1, true);
+SELECT pg_catalog.setval('public.blog_expression_id_seq', 4, true);
 
 
 --
 -- Name: blog_expressiontype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.blog_expressiontype_id_seq', 2, true);
+SELECT pg_catalog.setval('public.blog_expressiontype_id_seq', 4, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 30, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 49, true);
 
 
 --
@@ -942,7 +994,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mikola-s
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 25, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 27, true);
 
 
 --

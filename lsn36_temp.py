@@ -72,7 +72,7 @@ start = Comment.objects.filter(text__contains='Start').update(text="Start is upd
 middle = Comment.objects.filter(text__contains='Middle').update(text="Middle is update")
 finish = Comment.objects.filter(text__contains='Finish').update(text="Finish is update")
 
-qs = Comment.objects.filter(text__contains='k').
+qs = Comment.objects.filter(text__contains='k')
 print(*qs, sep='\n')
 qs = qs.exclude(text__contains='c')
 
