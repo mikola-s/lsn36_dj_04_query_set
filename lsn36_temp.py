@@ -49,6 +49,45 @@ qs = Comment.objects.filter(text__contains='user2')
 
 qs = Comment.objects.filter(target__author__username='irina').order_by('pk')
 
+# task 02
+
+qs = Comment.objects.all().order_by('pk').values('id', 'text')[:5]
+print([])
+
+# task 03
+
+qs = Comment.objects.bulk_create([
+    Comment(
+        author=Author.objects.get(username="user1"),
+        text="Start -- Lorem Ipsum has been the industry's",
+        target=Article.objects.get(pk=4),
+        post_time=now(),
+    ),
+    Comment(
+        author=Author.objects.get(username="user2"),
+        text="Many desktop publishing -- Middle -- packages and",
+        target=Article.objects.get(pk=5),
+        post_time=now(),
+    ),
+    Comment(
+        author=Author.objects.get(username="maxim"),
+        text="All the Lorem Ipsum generators on the Internet tend -- Finish",
+        target=Article.objects.get(pk=6),
+        post_time=now(),
+    ),
+    Comment(
+        author=Author.objects.get(username="irina"),
+        text=' to generate Lorem Ipsum which looks reasonable',
+        target=Article.objects.get(pk=7),
+        post_time=now(),
+    ),
+    Comment(
+        author=Author.objects.get(username="user3"),
+        text='Lorem Ipsum comes from sections 1.10.32 and 1.10.33',
+        target=Article.objects.get(pk=1),
+        post_time=now(),
+    ),
+])
 
 Comment.objects.create(author=Author.objects.get(username="irina"), text='one year before', target=Article.objects.get(pk=1))
 
